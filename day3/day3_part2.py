@@ -7,25 +7,17 @@ def get_max_voltage(line : str) -> int:
     """
     len_of_line = len(line)
     maximums = ""
-
+    maximum_position = -1
     for numbers_left_to_pick in range(12, 0, -1): # 12 is for the amount of numbers we need to pick from each line.
-        if numbers_left_to_pick == 12:
-            previous_maximum = max(line[:len_of_line - (numbers_left_to_pick - 1)]) # We've now picked a number so decrease by 1.
-            previous_maximum_position = line.find(previous_maximum)
-            maximums += previous_maximum # Adding the string of the previous maximum to the string of all the maximums.
-            print(maximums)
-            continue
-
-        search_start_position = previous_maximum_position + 1
-        search_end_position = len_of_line - (numbers_left_to_pick - 1)
+        search_start_position = maximum_position + 1 # First time around this is 0
+        previous_maximum_position = maximum_position + 1
+        search_end_position = len_of_line - (numbers_left_to_pick - 1) 
         subline = line[search_start_position : search_end_position]
-        previous_maximum, previous_maximum_position = find_max_value_and_position(subline)
-        previous_maximum_position += 12 - numbers_left_to_pick
-        print(numbers_left_to_pick, search_start_position, search_end_position, previous_maximum, previous_maximum_position)
-        if previous_maximum_position == -1:
+        maximum, maximum_position = find_max_value_and_position(subline)
+        maximum_position += previous_maximum_position
+        if maximum_position == -1:
             print("error, previous max not found")
-        maximums += previous_maximum
-        print(maximums)
+        maximums += maximum
     return int(maximums)
 
 def find_max_value_and_position(_string : str) -> [str, int]:
@@ -38,7 +30,7 @@ def find_max_value_and_position(_string : str) -> [str, int]:
     return [max_value, max_value_position]
 
 def main():
-    with open("day3/test.txt", 'r') as f:
+    with open("day3/input.txt", 'r') as f:
         exercise_input = f.read().splitlines()
     total_max_voltage = 0
     for line in exercise_input:
